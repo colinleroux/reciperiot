@@ -77,6 +77,7 @@ class RecipesController extends BaseController
             'notes' => $validatedData['notes'],
             'user_id' => $validatedData['user_id'],
             'difficulty' => $validatedData['difficulty'],
+            'time' => $validatedData['time'],
         ]);
 
         // Return the created recipe resource

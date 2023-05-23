@@ -9,7 +9,7 @@ class RecipePictureResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
-     *
+     * Return recipe picture details
      * @return array<string, mixed>
      */
     public function toArray(Request $request): array

@@ -9,7 +9,7 @@ class RecipeResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
-     * Return limited response to min payload for fields not displayed on landing page
+     * Return limited response of recipe to reduce payload for fields not needed to be displayed on landing page
      * @return array<string, mixed>
      */
     public function toArray(Request $request): array

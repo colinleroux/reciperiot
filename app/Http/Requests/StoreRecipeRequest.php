@@ -28,6 +28,7 @@ class StoreRecipeRequest extends FormRequest
             'notes' => ['required'],
             'user_id' => ['required'],
             'difficulty' => ['required'],
+            'time' => ['required'],
         ];
     }
 }

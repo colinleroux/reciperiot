@@ -9,7 +9,7 @@ class FavoritesResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
-     *
+     * Users favourite recipes
      * @return array<string, mixed>
      */
     public function toArray(Request $request): array

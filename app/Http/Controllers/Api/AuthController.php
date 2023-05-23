@@ -16,7 +16,8 @@ class AuthController extends Controller
 {
     use HttpResponses;
     /**
-     * success response method.
+     * success response method. Used custom response method as opposed to
+     * extending BaseController for future flexibility
      *
      * @return JsonResponse
      */

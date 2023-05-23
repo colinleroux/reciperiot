@@ -9,7 +9,7 @@ class InstructionResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
-     *
+     * Return recipe instructions
      * @return array<string, mixed>
      */
     public function toArray(Request $request): array

@@ -19,6 +19,7 @@ return new class extends Migration
             $table->text('notes')->nullable();
             $table->text('user_id');
             $table->enum('difficulty', ['easy', 'medium', 'hard'])->default('easy');
+            $table->integer('time')->nullable();
             $table->timestamps();
         });
 
