@@ -419,5 +419,21 @@ class RecipesController extends BaseController
 
         return $this->success(null, 'Picture deleted successfully.', 200);
     }
+    public function deleteInstruction(Request $request, $recipeId)
+    {
+        // Find the instruction by ID
+        $instruction = Instruction::find($request->input('instruction_id'));
+       
+        $recipeId = intval($recipeId);
+        // Check if the instruction exists and belongs to the recipe
+        if (!$instruction || $instruction->recipe_id !== $recipeId) {
+        // if ($instruction->recipe_id !== $recipeId) {
+            return $this->error('Instruction not found for the given recipe.', 'error', 404);
+        }
 
+        // Delete the instruction from the database
+        $instruction->delete();
+
+        return $this->success(null, 'Instruction deleted successfully.', 200);
+    }
 }
