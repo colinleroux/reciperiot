@@ -63,7 +63,8 @@ Route::group(['prefix'=>'v1', 'namespace' => 'App\Http\Controllers\Api\V1', 'mid
     Route::patch('recipes/{recipe}', [RecipesController::class, 'update'])->name('recipes.update');
 // Delete a recipe and all associated ingredients/instructions/pictures
     Route::delete('/recipes/delete/{id}',  [RecipesController::class,'deleteRecipe'])->name('recipes.delete');
-
+// Delete a recipe picture for a recipe
+    Route::delete('/recipes/{recipe}/pictures', [RecipesController::class, 'deletePicture'])->name('recipes.pictures.delete');
 //USER ROUTES
 // Logout user - delete token
     Route::post('/logout', [AuthController::class, 'logout']);

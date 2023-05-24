@@ -392,4 +392,32 @@ class RecipesController extends BaseController
 
         return response()->json(['message' => 'Recipe deleted successfully.'], 200);
     }
+    /**
+     * Delete a picture for a recipe.
+     *
+     * @param Request $request
+     * @param Recipe $recipe
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function deletePicture(Request $request, Recipe $recipe)
+    {
+        $pictureId = $request->input('picture_id');
+
+        // Find the picture by ID
+        $picture = RecipePicture::find($pictureId);
+
+        // Check if the picture exists and belongs to the recipe
+        if (!$picture || $picture->recipe_id !== $recipe->id) {
+            return $this->error('Picture not found for the given recipe.', 'error', 404);
+        }
+
+        // Delete the picture from storage
+        //Storage::disk('public')->delete($picture->filename);
+        Storage::disk('public')->delete('users/' . $picture->filename);
+        // Delete the picture from the database
+        $picture->delete();
+
+        return $this->success(null, 'Picture deleted successfully.', 200);
+    }
+
 }
