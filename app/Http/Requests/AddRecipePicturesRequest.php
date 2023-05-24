@@ -21,11 +21,13 @@ class AddRecipePicturesRequest extends FormRequest
      */
     public function rules(): array
     {
+       // return [
+          //  'image' => ['required', 'image'], // Change 'pictures' to 'image' and validate as an image
+        //    'title' => ['required'],
+      //  ];
         return [
-            'pictures' => ['required', 'array'],
-            'pictures.*.url' => ['required', 'url'],
-            'pictures.*.filename' => ['required'],
-            'pictures.*.title' => ['required'],
+            'images' => ['required', 'array'],
+            'images.*' => ['required', 'image:jpeg,png,jpg,gif,svg', 'max:2048'],
         ];
     }
 }

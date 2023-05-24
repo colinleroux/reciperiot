@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Http\Controllers\Api\V1;
-
+use App\Traits\HttpResponses;
 use App\Http\Controllers\Api\BaseController as BaseController;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\AddRecipeIngredientsRequest;
@@ -26,13 +26,16 @@ use App\Models\RecipePicture;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\URL;
+use Illuminate\Support\Facades\Validator;
 use PhpParser\Node\Stmt\Return_;
 use Illuminate\Http\JsonResponse;
 use function PHPUnit\Framework\isNull;
 
 class RecipesController extends BaseController
 {
+    use HttpResponses;
     /**
      * Display a listing of the resource.
      */
@@ -122,25 +125,46 @@ class RecipesController extends BaseController
         return new RecipeResource($recipe->refresh());
     }
 
+   // public function addPictures(AddRecipePicturesRequest $request, Recipe $recipe)
     public function addPictures(AddRecipePicturesRequest $request, Recipe $recipe)
     {
-        $validatedData = $request->validated();
+        // Validation is handled by the AddRecipePicturesRequest class
 
-        // Add pictures to the recipe
-        $pictures = [];
-        foreach ($validatedData['pictures'] as $pictureData) {
+        $uploadFolder = 'users';
+        $uploadedImages = [];
+
+        foreach ($request->file('images') as $image) {
+            // Generate a unique filename for each image
+            $originalFilename = pathinfo($image->getClientOriginalName(), PATHINFO_FILENAME);
+            $extension = $image->getClientOriginalExtension();
+            $recipeId = $recipe->id;
+            $userId = auth()->user()->id;
+            $filename = $recipeId . '-' . $userId . '-' . $originalFilename . '-' . time() . '.' . $extension;
+
+            $image_uploaded_path = $image->storeAs($uploadFolder, $filename, 'public');
+
+            // Find the corresponding recipe
+            $recipe = Recipe::findOrFail($recipeId);
+
+            // Create the picture record in the database
             $picture = $recipe->pictures()->create([
-                'filename' => $pictureData['filename'],
-                'title' => $pictureData['title'],
-                'url' => $pictureData['url'],
+                'filename' => $filename,
+                'title' => $request->title,
+                'url' => Storage::disk('public')->url($image_uploaded_path),
             ]);
-            $pictures[] = $picture;
+
+            $uploadedImages[] = [
+                "recipe_id" => $recipeId,
+                "user_id" => $userId,
+                "image_id" => $picture->id,
+                "image_name" => $filename,
+                "image_url" => $picture->url,
+                "mime" => $image->getClientMimeType()
+            ];
         }
 
-        // Return the updated recipe resource
-        return new RecipeResource($recipe->refresh());
+        return $this->success($uploadedImages, 'Files Uploaded Successfully', 200);
     }
-
 
     /**
      * Display the specified resource.
