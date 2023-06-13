@@ -72,5 +72,8 @@ Route::group(['prefix'=>'v1', 'namespace' => 'App\Http\Controllers\Api\V1', 'mid
     //USER ROUTES
 // Logout user - delete token
     Route::post('/logout', [AuthController::class, 'logout']);
+
 });
 
+// User change password API
+Route::post('/change-password', [AuthController::class, 'changePassword'])->middleware('auth:sanctum');

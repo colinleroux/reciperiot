@@ -68,6 +68,31 @@ class AuthController extends Controller
         return $this->sendResponse($success, 'User created successfully.', $user->id);
     }
 
+    public function changePassword(Request $request): JsonResponse
+    {
+        $validator = Validator::make($request->all(), [
+            'current_password' => 'required',
+            'new_password' => 'required|min:6',
+            'confirm_password' => 'required|same:new_password',
+        ]);
+
+        if ($validator->fails()) {
+            return $this->sendError('Validation Error', $validator->errors(), 422);
+        }
+
+        $user = auth()->user();
+
+        if (!Hash::check($request->current_password, $user->password)) {
+            return $this->sendError('Current password is incorrect', [], 401);
+        }
+
+        $user->password = Hash::make($request->new_password);
+        $user->save();
+
+        return $this->sendResponse([], 'Password changed successfully.');
+    }
+
+
     public function logout(Request $request): JsonResponse
     {
         auth()->user()->tokens()->delete();
