@@ -4,7 +4,7 @@ use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\V1\RecipesController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
-
+use Illuminate\Auth\Events\Verified;
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -19,9 +19,15 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 // Unauthorised Routes
+////Reset password
+Route::post('password/reset/{token}', [AuthController::class, 'resetPassword'])->name('password.reset');
+Route::post('email/resend-verification', [AuthController::class, 'resendVerificationEmail'])->name('verification.resend');
 
 Route::post('login', [AuthController::class, 'login']);
 Route::post('register', [AuthController::class, 'register']);
+// Used after registration - route for accepting email link to verify users email address
+Route::get('/email/verify/{id}/{hash}', [AuthController::class, 'verify'])->name('verification.verify');
+Route::post('/password/email', [AuthController::class, 'sendResetLinkEmail'])->name('password.email');
 
 //Protected Routes
 

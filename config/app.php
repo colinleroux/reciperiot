@@ -16,7 +16,7 @@ return [
     |
     */
 
-    'name' => env('APP_NAME', 'Laravel'),
+    'name' => env('APP_NAME', 'reciperiot'),
 
     /*
     |--------------------------------------------------------------------------
@@ -59,6 +59,16 @@ return [
 
     'asset_url' => env('ASSET_URL'),
 
+    /*
+    |--------------------------------------------------------------------------
+    | Application Email Verification for new users
+    |--------------------------------------------------------------------------
+    |
+    | This value determines if email verification if required when a new user is created
+    | Set this in your ".env" file.
+    |
+    */
+    'email_verification' => env('EMAIL_VERIFICATION', true),
     /*
     |--------------------------------------------------------------------------
     | Application Timezone
