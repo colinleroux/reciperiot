@@ -61,7 +61,7 @@ class AuthController extends Controller
 
         $user = User::where('email', $request->email)->first();
 
-        if (!$user->hasVerifiedEmail()) {
+        if (config('app.email_verification') && !$user->hasVerifiedEmail()) {
             Auth::logout(); // Log out the user if their email is not verified
             return $this->sendError('Email not verified. Please check your email for verification instructions.', [], 401);
         }
@@ -85,10 +85,12 @@ class AuthController extends Controller
             return $this->sendResponse([], 'User created successfully. Please check your email for verification instructions.', $user->id);
         } else {
             $user->markEmailAsVerified();
+            $token = $user->createToken('API Token')->plainTextToken;
 
-            // Handle the login process or provide an access token if using an API
-
-            return $this->sendResponse([], 'User created successfully. Email verified.', $user->id);
+            return response()->json([
+                'user' => $user,
+                'token' => $token,
+            ], 200);
         }
     }
     public function verify(Request $request)
