@@ -52,7 +52,7 @@ class RecipesController extends BaseController
         $recipes = Recipe::where('user_id', $user->id)->paginate($perPage);
 
         if ($recipes->isEmpty()) {
-            abort(404, 'No recipes found for this user.');
+            return new AnonymousResourceCollection([], RecipeDetailResource::class);
         }
 
         return RecipeDetailResource::collection($recipes);
@@ -423,7 +423,7 @@ class RecipesController extends BaseController
     {
         // Find the instruction by ID
         $instruction = Instruction::find($request->input('instruction_id'));
-       
+
         $recipeId = intval($recipeId);
         // Check if the instruction exists and belongs to the recipe
         if (!$instruction || $instruction->recipe_id !== $recipeId) {
