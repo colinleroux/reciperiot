@@ -33,6 +33,8 @@ Route::post('/password/email', [AuthController::class, 'sendResetLinkEmail'])->n
 
 Route::group(['prefix'=>'v1', 'namespace' => 'App\Http\Controllers\Api\V1', 'middleware' => ['auth:sanctum']], function() {
 // ROUTES FOR  RECIPES
+// Route for retrieving recipes with provided ingredients(many) (search by ingredients)
+    Route::get('recipes/multiple', [RecipesController::class, 'searchByManyIngredients'])->name('recipes.searchByManyIngredients');
 // Route for retrieving all recipes
     Route::get('recipes', [RecipesController::class, 'index'])->name('recipes.index');
 // Route for retrieving all users favourite recipes {userid}
@@ -47,7 +49,8 @@ Route::group(['prefix'=>'v1', 'namespace' => 'App\Http\Controllers\Api\V1', 'mid
     Route::get('recipes/{recipe}/instructions', [RecipesController::class, 'getInstructions'])->name('recipes.instructions.index');
 // Route for retrieving recipes with provided ingredient (search by ingredient)
     Route::get('recipes', [RecipesController::class, 'searchByIngredients'])->name('recipes.searchByIngredients');
-// Route for retrieving recipes belonging to a userid
+
+    // Route for retrieving recipes belonging to a userid
     Route::get('recipes/user/{user}', [RecipesController::class, 'indexByUser'])->name('recipes.indexByUser');
 // Route for creating a basic recipe
     Route::post('/recipes', [RecipesController::class, 'store'])->name('recipes.store');

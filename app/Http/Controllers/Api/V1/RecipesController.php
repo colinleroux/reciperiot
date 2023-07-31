@@ -271,7 +271,7 @@ class RecipesController extends BaseController
             ]
         ]);
     }
-
+        /* Search for recipe by single ingredient */
         public function searchByIngredients(Request $request)
     {
         $query = $request->query('ingredients');
@@ -282,6 +282,26 @@ class RecipesController extends BaseController
 
         if ($recipes->isEmpty()) {
             return response()->json(['message' => 'No recipes found for that ingredient.'], 404);
+        }
+
+        return RecipeResource::collection($recipes);
+    }
+
+    /* Search for recipes using multiple ingredients */
+
+    public function searchByManyIngredients(Request $request)
+    {
+        $ingredients = $request->query('ingredients');
+
+        // Convert the ingredients array to lowercase for case-insensitive searching
+        $ingredients = array_map('strtolower', $ingredients);
+
+        $recipes = Recipe::whereHas('ingredients', function ($queryBuilder) use ($ingredients) {
+            $queryBuilder->whereIn('name', $ingredients);
+        })->get();
+
+        if ($recipes->isEmpty()) {
+            return response()->json(['message' => 'No recipes found for the specified ingredients.'], 404);
         }
 
         return RecipeResource::collection($recipes);

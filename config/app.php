@@ -64,7 +64,7 @@ return [
     | Application Email Verification for new users
     |--------------------------------------------------------------------------
     |
-    | This value determines if email verification if required when a new user is created
+    | This value determines if email verification is required when a new user is created
     | Set this in your ".env" file.
     |
     */
