@@ -306,6 +306,34 @@ class RecipesController extends BaseController
 
         return RecipeResource::collection($recipes);
     }
+// Search funtionality
+    public function search(Request $request)
+    {
+        $query = $request->query();
+
+        $recipes = Recipe::query();
+
+        if (isset($query['title'])) {
+            $recipes->where('title', 'LIKE', '%' . $query['title'] . '%');
+        }
+
+        if (isset($query['ingredients'])) {
+            $ingredients = explode(',', $query['ingredients']);
+            $recipes->whereHas('ingredients', function ($queryBuilder) use ($ingredients) {
+                $queryBuilder->whereIn('name', $ingredients);
+            });
+        }
+
+        if (isset($query['time'])) {
+            $recipes->where('time', $query['time']);
+        }
+
+        // Add more filters as needed...
+
+        $result = $recipes->get();
+
+        return RecipeResource::collection($result);
+    }
 
     public function updateInstructions(UpdateRecipeInstructionsRequest $request, Recipe $recipe)
     {

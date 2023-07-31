@@ -33,6 +33,7 @@ Route::post('/password/email', [AuthController::class, 'sendResetLinkEmail'])->n
 
 Route::group(['prefix'=>'v1', 'namespace' => 'App\Http\Controllers\Api\V1', 'middleware' => ['auth:sanctum']], function() {
 // ROUTES FOR  RECIPES
+    Route::get('recipes/search', [RecipesController::class, 'search'])->name('recipes.search');
 // Route for retrieving recipes with provided ingredients(many) (search by ingredients)
     Route::get('recipes/multiple', [RecipesController::class, 'searchByManyIngredients'])->name('recipes.searchByManyIngredients');
 // Route for retrieving all recipes
